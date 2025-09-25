@@ -7,8 +7,14 @@ from config import system_prompt
 
 
 def main():
-    res = client.models.generate_content(model="gemini-2.0-flash-001", contents=messages, config=types.GenerateContentConfig(system_instruction=system_prompt))
-    print(res.text)
+    res = client.models.generate_content(model="gemini-2.0-flash-001", contents=messages, config=types.GenerateContentConfig(system_instruction=system_prompt, tools=[define_functions_schema()]))
+
+    if (isinstance(res.text, str)):
+        print(res.text)
+
+    if res.function_calls != None and len(res.function_calls) > 0:
+        for call_fn in res.function_calls:
+            print(f"Calling function: {call_fn.name}({call_fn.args})")
 
     if g_flags["verbose"]:
         print(f"User prompt: {messages[0].parts[0].text}")
@@ -37,6 +43,27 @@ def parse_arguments():
         flag_name = flag.removeprefix("--")
         if flag_name in g_flags:
             g_flags[flag_name] = True
+
+def define_functions_schema():
+    schema_get_files_info = types.FunctionDeclaration(
+    name="get_files_info",
+    description="Lists files in the specified directory along with their sizes, constrained to the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "directory": types.Schema(
+                type=types.Type.STRING,
+                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
+                ),
+            },
+        ),
+    )
+
+    return types.Tool(
+        function_declarations=[
+            schema_get_files_info
+        ]
+    )
         
 
 if __name__ == "__main__":
