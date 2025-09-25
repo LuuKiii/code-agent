@@ -1,8 +1,8 @@
 import os
 
-def get_files_info(working_dir, dir="."):
+def get_files_info(working_dir, directory="."):
     abs_working_dir = os.path.abspath(working_dir)
-    abs_access_dir = os.path.abspath(os.path.join(working_dir, dir))
+    abs_access_dir = os.path.abspath(os.path.join(working_dir, directory))
     
     if not os.path.commonprefix([abs_working_dir, abs_access_dir]) == abs_working_dir:
         return f'Error: Cannot list "{abs_access_dir}" as it is outside the permitted working directory'

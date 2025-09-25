@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from config import system_prompt
+from functions import cf
 
 
 def main():
@@ -14,7 +15,13 @@ def main():
 
     if res.function_calls != None and len(res.function_calls) > 0:
         for call_fn in res.function_calls:
-            print(f"Calling function: {call_fn.name}({call_fn.args})")
+            function_call_result = cf.call_function(call_fn, g_flags["verbose"])
+
+            if not function_call_result.parts[0].function_response.response:
+                raise Exception("Unexcpected function response")
+            elif g_flags["verbose"]:
+                print(f"-> {function_call_result.parts[0].function_response.response}")
+            # print(f"Calling function: {call_fn.name}({call_fn.args})")
 
     if g_flags["verbose"]:
         print(f"User prompt: {messages[0].parts[0].text}")
