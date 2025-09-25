@@ -59,8 +59,8 @@ def define_functions_schema():
         ),
     )
 
-    schema_get_files_content = types.FunctionDeclaration(
-    name="get_files_content",
+    schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
     description="Returns contents of the file on the the specified path, constrained to the working directory.",
     parameters=types.Schema(
         type=types.Type.OBJECT,
@@ -112,7 +112,7 @@ def define_functions_schema():
     return types.Tool(
         function_declarations=[
             schema_get_files_info,
-            schema_get_files_content,
+            schema_get_file_content,
             schema_write_file,
             schema_run_python_file
         ]
