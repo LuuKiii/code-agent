@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from config import system_prompt
-from functions import cf
+from functions import call_function as cf
 
 
 def main():
