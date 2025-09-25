@@ -1,4 +1,5 @@
 from functions import get_files_info as gfi
+from functions import get_file_content as gfc
 
 test_cases = [
     {
@@ -29,13 +30,13 @@ test_cases = [
 ]
 
 def tests():
-    for test_case in test_cases:
-        print("============================")
-        result = gfi.get_files_info(*test_case["args"])
+    # for test_case in test_cases:
+    #     print("============================")
+    #     result = gfi.get_files_info(*test_case["args"])
 
         # print(f'Excpeted: {test_case["excpected"]}')
         # print("=======")
-        print(result)
+        # print(result)
 
         # if result.inc == test_case["excpected"]:
         #     print("PASS")
@@ -47,6 +48,11 @@ def tests():
     # print(gfi.get_files_info("calculator", "/bin"))
     # print(gfi.get_files_info("calculator", "../"))
 
-print(__name__)
+    # print(gfc.get_file_contents("calculator", "lorem.txt"))
+    print(gfc.get_file_contents("calculator", "main.py"))
+    print(gfc.get_file_contents("calculator", "pkg/calculator.py"))
+    print(gfc.get_file_contents("calculator", "/bin/cat"))
+    print(gfc.get_file_contents("calculator", "pkg/does_not_exist.py"))
+
 if __name__ == "__main__":
     tests()
