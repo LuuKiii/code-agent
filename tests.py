@@ -1,5 +1,6 @@
 from functions import get_files_info as gfi
 from functions import get_file_content as gfc
+from functions import write_file as wc
 
 test_cases = [
     {
@@ -49,10 +50,15 @@ def tests():
     # print(gfi.get_files_info("calculator", "../"))
 
     # print(gfc.get_file_contents("calculator", "lorem.txt"))
-    print(gfc.get_file_contents("calculator", "main.py"))
-    print(gfc.get_file_contents("calculator", "pkg/calculator.py"))
-    print(gfc.get_file_contents("calculator", "/bin/cat"))
-    print(gfc.get_file_contents("calculator", "pkg/does_not_exist.py"))
+    # print(gfc.get_file_contents("calculator", "main.py"))
+    # print(gfc.get_file_contents("calculator", "pkg/calculator.py"))
+    # print(gfc.get_file_contents("calculator", "/bin/cat"))
+    # print(gfc.get_file_contents("calculator", "pkg/does_not_exist.py"))
+
+    print(wc.write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum"))
+    print(wc.write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet"))
+    print(wc.write_file("calculator", "/tmp/temp.txt", "this should not be allowed"))
+    
 
 if __name__ == "__main__":
     tests()
