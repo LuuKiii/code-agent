@@ -20,7 +20,7 @@ def main():
             if not function_call_result.parts[0].function_response.response:
                 raise Exception("Unexcpected function response")
             elif g_flags["verbose"]:
-                print(f"-> {function_call_result.parts[0].function_response.response}")
+                print(f"-> \n{function_call_result.parts[0].function_response.response["result"]}\n=====")
             # print(f"Calling function: {call_fn.name}({call_fn.args})")
 
     if g_flags["verbose"]:
