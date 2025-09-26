@@ -15,8 +15,8 @@ def main():
             print(f"Unexpected model exception: {str(e)}")
             break
 
-        if (isinstance(generated_content.text, str)):
-            print(generated_content.text)
+        if not(generated_content.function_calls):
+            print("\tAgent: ", generated_content.text)
             if PROMPT_END_MSG in generated_content.text:
                 break
 
