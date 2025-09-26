@@ -3,31 +3,41 @@ import sys
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from config import system_prompt
+from config import system_prompt, USE_MODEL, MAX_AGENT_ITERATIONS, PROMPT_END_MSG
 from functions_schema import define_functions_schema
 from functions import call_function as cf
 
-
 def main():
-    res = client.models.generate_content(model="gemini-2.0-flash-001", contents=messages, config=types.GenerateContentConfig(system_instruction=system_prompt, tools=[define_functions_schema()]))
+    for i in range(0, MAX_AGENT_ITERATIONS):
+        try:
+            generated_content = client.models.generate_content(model=USE_MODEL, contents=messages, config=types.GenerateContentConfig(system_instruction=system_prompt, tools=[define_functions_schema(), ]))
+        except Exception as e:
+            print(f"Unexpected model exception: {str(e)}")
+            break
 
-    if (isinstance(res.text, str)):
-        print(res.text)
+        if (isinstance(generated_content.text, str)):
+            print(generated_content.text)
+            if PROMPT_END_MSG in generated_content.text:
+                break
 
-    if res.function_calls != None and len(res.function_calls) > 0:
-        for call_fn in res.function_calls:
-            function_call_result = cf.call_function(call_fn, g_flags["verbose"])
+        for response_candiate in generated_content.candidates:
+            messages.append(response_candiate.content)
 
-            if not function_call_result.parts[0].function_response.response:
-                raise Exception("Unexcpected function response")
-            elif g_flags["verbose"]:
-                print(f"-> \n{function_call_result.parts[0].function_response.response["result"]}\n=====")
-            # print(f"Calling function: {call_fn.name}({call_fn.args})")
+        if generated_content.function_calls != None:
+            for call_fn in generated_content.function_calls:
+                function_call_result = cf.call_function(call_fn, g_flags["verbose"])
+
+                if not function_call_result.parts[0].function_response.response:
+                    raise Exception("Unexcpected function response")
+                elif g_flags["verbose"]:
+                    print(f"-> \n{function_call_result.parts[0].function_response.response["result"]}\n=====")
+                
+                messages.append(types.Content(role="user", parts=[types.Part(text=function_call_result.parts[0].function_response.response["result"])]))
 
     if g_flags["verbose"]:
         print(f"User prompt: {messages[0].parts[0].text}")
-        print(f"Prompt tokens: {res.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {res.usage_metadata.candidates_token_count}")
+        print(f"Prompt tokens: {generated_content.usage_metadata.prompt_token_count}")
+        print(f"Response tokens: {generated_content.usage_metadata.candidates_token_count}")
 
 def parse_arguments():
     try:
@@ -60,7 +70,7 @@ if __name__ == "__main__":
 
     messages = []
     g_flags = {
-        "verbose": False 
+        "verbose": False,
     }
 
     parse_arguments()
