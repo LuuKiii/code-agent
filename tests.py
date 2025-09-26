@@ -3,6 +3,9 @@ from functions import get_file_content as gfc
 from functions import write_file as wc
 from functions import run_python_file as rpf
 
+
+#TODO: not really unit tests, more of a "print what i need" atm. fix that.
+
 test_cases = [
     {
     "args": ["calculator", "."], 
@@ -30,7 +33,6 @@ test_cases = [
 '''Error: Cannot list "../" as it is outside the permitted working directory
 '''},
 ]
-
 def tests():
     # for test_case in test_cases:
     #     print("============================")
