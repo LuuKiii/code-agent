@@ -3,5 +3,3 @@ A simple framework for building agents that use large language models (LLMs) to 
 - Modular design for adding new agent behaviors
 - Integrates with LLM APIs
 - Example project "calculator" to test current agent behaviour and it's ability to use LLM for reading and fixing provided code.
-
-See the examples directory for usage instructions.
